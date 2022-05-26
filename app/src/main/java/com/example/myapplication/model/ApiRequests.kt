@@ -7,9 +7,12 @@ import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Path
+import retrofit2.http.Query
+import javax.inject.Inject
+import javax.inject.Singleton
 
 
-interface ApiRequest {
+interface ApiRequests {
 
     @Headers("X-Auth-Token:65e0452590374053a107528fbbfdb939")
 
@@ -19,3 +22,4 @@ interface ApiRequest {
     fun  getTeam(@Path("id") id: Int ) : Call<Team>
 
 }
+

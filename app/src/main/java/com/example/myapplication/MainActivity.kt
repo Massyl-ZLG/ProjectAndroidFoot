@@ -6,7 +6,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 
-const val BASE_URL = "https://api.football-data.org/v4/"
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,7 +18,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         title="Welcome"
-
         auth = FirebaseAuth.getInstance()
 
     }
@@ -30,11 +29,11 @@ class MainActivity : AppCompatActivity() {
         finish()
     }
 
-    fun goToTeamsScreen(view: View) {
+    /*fun goToTeamsScreen(view: View) {
         auth.signOut()
         val intent = Intent(this, TeamsActivity::class.java)
         startActivity(intent)
         finish()
-    }
+    }*/
 }
 
