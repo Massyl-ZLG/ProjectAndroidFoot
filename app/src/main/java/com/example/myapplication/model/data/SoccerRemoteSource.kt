@@ -3,6 +3,9 @@ package com.example.myapplication.model.data
 import android.util.Log
 import com.example.myapplication.model.Player
 import com.example.myapplication.model.Team
+import com.example.myapplication.model.match.*
+import com.example.myapplication.model.response.MatchResponse
+import com.example.myapplication.model.response.MatchesResponse
 import com.example.myapplication.model.response.TeamResponse
 import com.example.myapplication.model.response.TeamsResponse
 import kotlinx.coroutines.Dispatchers
@@ -12,6 +15,7 @@ import javax.inject.Inject
 class SoccerRemoteSource @Inject constructor(private val SoccerApi:SoccerApi){
     private var cachedTeams: List<Team>? = null
     private var cachedPlayers: List<Player>? = null
+    private var cachedMatches : List<Match>? = null
 
     suspend fun getTeams() : List<Team> = withContext(Dispatchers.IO){
         var cachedTeams = cachedTeams
@@ -66,4 +70,39 @@ class SoccerRemoteSource @Inject constructor(private val SoccerApi:SoccerApi){
             )
         }
     }
+
+
+
+    suspend fun getMatches() : List<Match> = withContext(Dispatchers.IO){
+        var cachedMatches = cachedMatches
+
+        if (cachedMatches == null) {
+            cachedMatches = SoccerApi.getMatches().mapMatchesToItems()
+            this@SoccerRemoteSource.cachedMatches = cachedMatches
+        }
+        Log.d("SOCCER REMOTE MATCHES" , SoccerApi.getMatches().toString());
+        return@withContext cachedMatches
+    }
+
+    private fun MatchesResponse.mapMatchesToItems(): List<Match> {
+        return this.matches.map { match ->
+            Match(
+                id = match.id ,
+                utcDate=match.utcDate ,
+                status= match.status ,
+                matchday= match.matchday ,
+                stage= match.stage ,
+                group= match. group ,
+                lastUpdated= match.lastUpdated ,
+                area = match.area ,
+                competition = match.competition ,
+                season = match.season ,
+                homeTeam =match.homeTeam  ,
+                awayTeam =match.awayTeam ,
+                score = match.score ,
+                odds = match.odds ,
+            )
+        }
+    }
+
 }

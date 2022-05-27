@@ -1,11 +1,11 @@
 package com.example.myapplication.model.response
 
 import com.example.myapplication.model.Player
+import com.example.myapplication.model.match.*
 import com.google.gson.annotations.SerializedName
 
 
 data class TeamsResponse(val teams: List<TeamResponse>)
-
 
 data class TeamResponse(
     @SerializedName("id") val id: String,
@@ -23,7 +23,7 @@ data class TeamResponse(
 )
 
 
-data class  PlayersResponse(val teams: List<PlayerResponse>)
+data class  PlayersResponse(val players: List<PlayerResponse>)
 
 data class  PlayerResponse(
     @SerializedName("id") val id: String,
@@ -32,5 +32,25 @@ data class  PlayerResponse(
     @SerializedName("dateOfBirth") val dateOfBirth: String,
     @SerializedName("nationality") val nationality: String,
 )
+
+data class MatchesResponse(val matches: List<MatchResponse>)
+
+data class  MatchResponse(
+    @SerializedName("id") val id: String,
+    @SerializedName("utcDate") val utcDate: String,
+    @SerializedName("status") val status: String,
+    @SerializedName("matchday") val matchday: String,
+    @SerializedName("stage") val stage: String,
+    @SerializedName("group") val group: String,
+    @SerializedName("lastUpdated") val lastUpdated: String,
+    @SerializedName("area") val area: Area,
+    @SerializedName("competition") val competition: Competition,
+    @SerializedName("season") val season: Season,
+    @SerializedName("homeTeam") val homeTeam: HomeTeam,
+    @SerializedName("awayTeam") val awayTeam: AwayTeam,
+    @SerializedName("score") val score: Score,
+    @SerializedName(" odds") val  odds: Odds
+)
+
 
 

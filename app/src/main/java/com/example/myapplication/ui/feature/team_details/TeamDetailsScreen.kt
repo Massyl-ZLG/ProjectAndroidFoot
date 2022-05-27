@@ -30,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
+import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
@@ -37,7 +38,7 @@ import com.example.myapplication.model.Player
 import com.example.myapplication.model.Team
 import kotlin.math.min
 
-
+@ExperimentalCoilApi
 @Composable
 fun TeamDetailsScreen(state: TeamDetailsContract.State) {
     val scrollState = rememberLazyListState()
@@ -288,12 +289,14 @@ fun CustomLink(
 
         // attach a string annotation that
         // stores a URL to the text "link"
-        addStringAnnotation(
-            tag = "URL",
-            annotation = "https://www.geeksforgeeks.org",
-            start = 10,
-            end = mStr.length
-        )
+        item?.website?.let {
+            addStringAnnotation(
+                tag = "URL",
+                annotation = it,
+                start = 10,
+                end = mStr.length
+            )
+        }
 
     }
 

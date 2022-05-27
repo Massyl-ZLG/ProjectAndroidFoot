@@ -1,8 +1,10 @@
 package com.example.myapplication.ui
 
+import android.graphics.drawable.Icon
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -14,12 +16,16 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.myapplication.ui.NavigationKeys.Arg.PLAYER_ID
 import com.example.myapplication.ui.NavigationKeys.Arg.TEAM_ID
+import com.example.myapplication.ui.feature.matches.MatchesScreen
+import com.example.myapplication.ui.feature.matches.MatchesViewModel
 import com.example.myapplication.ui.feature.team_details.TeamDetailsScreen
 import com.example.myapplication.ui.feature.team_details.TeamDetailsViewModel
 import com.example.myapplication.ui.feature.teams.TeamsScreen
 import com.example.myapplication.ui.feature.teams.TeamsViewModel
+import com.example.myapplication.ui.navBar.NavBar
 import com.example.myapplication.ui.theme.ComposeSampleTheme
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.android.material.bottomappbar.BottomAppBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.receiveAsFlow
 
@@ -42,9 +48,16 @@ class EntryPointActivity : AppCompatActivity() {
 @Composable
 private fun TeamsApp() {
     val navController = rememberNavController()
+    Scaffold(
+        bottomBar = {NavBar(navController)}
+    ) {
     NavHost(navController, startDestination = NavigationKeys.Route.TEAMS_LIST) {
+
         composable(route = NavigationKeys.Route.TEAMS_LIST) {
             TeamsDestination(navController)
+        }
+        composable(route = NavigationKeys.Route.MATCHES_LIST) {
+            MatchesDestination(navController)
         }
         composable(
               route = NavigationKeys.Route.TEAM_DETAILS,
@@ -63,6 +76,7 @@ private fun TeamsApp() {
             LocationDestination()
         }*/
     }
+    }
 }
 
 @Composable
@@ -73,6 +87,19 @@ private fun TeamsDestination(navController: NavHostController) {
         effectFlow = viewModel.effects.receiveAsFlow(),
         onNavigationRequested = { itemId ->
             navController.navigate("${NavigationKeys.Route.TEAMS_LIST}/$itemId")
+        }
+    )
+}
+
+
+@Composable
+private fun MatchesDestination(navController: NavHostController) {
+    val viewModel: MatchesViewModel = hiltViewModel()
+    MatchesScreen(
+        state = viewModel.state,
+        effectFlow = viewModel.effects.receiveAsFlow(),
+        onNavigationRequested = { itemId ->
+            navController.navigate("${NavigationKeys.Route.MATCHES_LIST}/$itemId")
         }
     )
 }
@@ -102,8 +129,9 @@ object NavigationKeys {
     }
 
     object Route {
-
+        const val PROFIL = "profil"
         const val TEAMS_LIST = "teams_list"
+        const val MATCHES_LIST = "matches_list"
         const val TEAM_DETAILS = "$TEAMS_LIST/{$TEAM_ID}"
         const val TEAM_DETAILS_PLAYER = "$TEAMS_LIST/{$TEAM_ID}/{$PLAYER_ID}"
     }
