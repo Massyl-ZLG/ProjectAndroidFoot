@@ -16,6 +16,7 @@ class SoccerApi @Inject constructor(private val service: Service){
         @GET("teams")
         suspend fun getTeams(): TeamsResponse
 
+        @Headers("X-Auth-Token:65e0452590374053a107528fbbfdb939")
         @GET("teams/{teamId}")
         suspend fun getTeam(@Path("teamId") teamId: String): TeamResponse
     }
