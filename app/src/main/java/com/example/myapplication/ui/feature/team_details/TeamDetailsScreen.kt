@@ -12,15 +12,21 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
@@ -116,7 +122,10 @@ fun TeamInfos(
                         fontWeight = FontWeight.Bold
                     )
                 }
-                item{
+                item {
+                    CustomLink(item)
+                }
+                /*item{
                     Text(
                         modifier = Modifier.padding(end = 16.dp, top = 16.dp , bottom = 16.dp),
                         text = "Site Web : " +item?.website ?: "",
@@ -125,7 +134,7 @@ fun TeamInfos(
                         maxLines = 2,
                         fontWeight = FontWeight.Bold
                     )
-                }
+                }*/
         }
     }
 }
@@ -218,19 +227,25 @@ private fun TeamDetailsCollapsingToolbar(
             ),
             elevation = 4.dp
         ) {
-            Image(
-                painter = rememberImagePainter(
-                    data = team?.crest,
 
-                    builder = {
-                        transformations(CircleCropTransformation())
-                    },
+            LazyRow( horizontalArrangement = Arrangement.Center){
+                item {
+                    Image(
+                        painter = rememberImagePainter(
+                            data = team?.crest,
 
-                ),
+                            builder = {
+                                transformations(CircleCropTransformation())
+                            },
 
-                modifier = Modifier.size(max(72.dp, imageSize)),
-                contentDescription = "Food category thumbnail picture",
-            )
+                            ),
+
+                        modifier = Modifier.size(max(72.dp, imageSize)),
+                        contentDescription = "Food category thumbnail picture",
+                    )
+                }
+            }
+
         }
        /* PlayerDetails(
             item = player,
@@ -245,3 +260,65 @@ private fun TeamDetailsCollapsingToolbar(
         )*/
     }
 }
+
+
+// Creating a composable function
+// to create a Clickable Text
+// Calling this function as content
+// in the above function
+@Composable
+fun CustomLink(
+    item : Team?
+){
+
+    // Creating an annonated string
+    val mAnnotatedLinkString = buildAnnotatedString {
+
+        // creating a string to display in the Text
+
+        val mStr  = "Site Web :"+ item?.website
+
+        append(mStr)
+        addStyle(
+            style = SpanStyle(
+                color = Color.Blue,
+                textDecoration = TextDecoration.Underline
+            ), start = 10, end = mStr.length
+        )
+
+        // attach a string annotation that
+        // stores a URL to the text "link"
+        addStringAnnotation(
+            tag = "URL",
+            annotation = "https://www.geeksforgeeks.org",
+            start = 10,
+            end = mStr.length
+        )
+
+    }
+
+    // UriHandler parse and opens URI inside
+    // AnnotatedString Item in Browse
+    val mUriHandler = LocalUriHandler.current
+
+    Column(
+        Modifier
+            .fillMaxSize()
+            .padding(end = 16.dp, bottom = 16.dp), verticalArrangement = Arrangement.Center) {
+
+        // ???? Clickable text returns position of text
+        // that is clicked in onClick callback
+        ClickableText(
+            modifier = Modifier.padding(end = 16.dp, top = 16.dp),
+            text = mAnnotatedLinkString,
+            onClick = {
+                mAnnotatedLinkString
+                    .getStringAnnotations("URL", it, it)
+                    .firstOrNull()?.let { stringAnnotation ->
+                        mUriHandler.openUri(stringAnnotation.item)
+                    }
+            }
+        )
+    }
+}
+
