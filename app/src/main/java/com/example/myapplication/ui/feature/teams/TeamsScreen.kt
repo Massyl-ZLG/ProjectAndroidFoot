@@ -19,11 +19,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import com.example.myapplication.model.Team
+import com.example.myapplication.ui.theme.ComposeSampleTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onEach
 
@@ -182,7 +184,7 @@ fun TeamDetails(
 
 @Composable
 fun TeamThumbnail(
-    crest: String,
+    crest: String?,
     iconTransformationBuilder: ImageRequest.Builder.() -> Unit
 ) {
     Image(
@@ -207,3 +209,11 @@ fun LoadingBar() {
     }
 }
 
+
+@Preview(showBackground = true)
+@Composable
+fun DefaultPreview() {
+    ComposeSampleTheme {
+        TeamsScreen(TeamsContract.State(), null, { })
+    }
+}

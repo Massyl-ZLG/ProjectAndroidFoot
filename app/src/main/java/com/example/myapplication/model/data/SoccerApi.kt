@@ -9,15 +9,15 @@ import javax.inject.Inject
 
 class SoccerApi @Inject constructor(private val service: Service){
     suspend fun getTeams(): TeamsResponse = service.getTeams()
-    suspend fun getTeam(teamId : Int): TeamResponse = service.getTeam(teamId)
+    suspend fun getTeam(teamId : String): TeamResponse = service.getTeam(teamId)
 
     interface Service {
         @Headers("X-Auth-Token:65e0452590374053a107528fbbfdb939")
         @GET("teams")
         suspend fun getTeams(): TeamsResponse
 
-        @GET("team/{teamId}")
-        suspend fun getTeam(@Path("teamId") teamId: Int): TeamResponse
+        @GET("teams/{teamId}")
+        suspend fun getTeam(@Path("teamId") teamId: String): TeamResponse
     }
 
     companion object {

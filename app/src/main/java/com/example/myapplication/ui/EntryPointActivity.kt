@@ -7,9 +7,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.myapplication.ui.NavigationKeys.Arg.TEAM_ID
+import com.example.myapplication.ui.feature.team_details.TeamDetailsScreen
+import com.example.myapplication.ui.feature.team_details.TeamDetailsViewModel
 import com.example.myapplication.ui.feature.teams.TeamsScreen
 import com.example.myapplication.ui.feature.teams.TeamsViewModel
 import com.example.myapplication.ui.theme.ComposeSampleTheme
@@ -40,22 +45,22 @@ private fun TeamsApp() {
         composable(route = NavigationKeys.Route.TEAMS_LIST) {
             TeamsDestination(navController)
         }
-        /*  composable(
-              route = NavigationKeys.Route.FOOD_CATEGORY_DETAILS,
+        composable(
+              route = NavigationKeys.Route.TEAM_DETAILS,
               arguments = listOf(
-                  navArgument(NavigationKeys.Arg.FOOD_CATEGORY_ID) {
+                  navArgument(NavigationKeys.Arg.TEAM_ID) {
                       type = NavType.StringType
                   }
               )
           ) {
-              FoodCategoryDetailsDestination()
+              TeamDetailsDestination()
           }
-          composable(route = NavigationKeys.Route.POSTS) {
-              PostsDestination()
-          }
-          composable(route = NavigationKeys.Route.LOCATION) {
-              LocationDestination()
-          }*/
+          /*composable(route = NavigationKeys.Route.POSTS) {
+            PostsDestination()
+        }
+        composable(route = NavigationKeys.Route.LOCATION) {
+            LocationDestination()
+        }*/
     }
 }
 
@@ -71,6 +76,15 @@ private fun TeamsDestination(navController: NavHostController) {
     )
 }
 
+
+
+@Composable
+private fun TeamDetailsDestination() {
+    val viewModel: TeamDetailsViewModel = hiltViewModel()
+    TeamDetailsScreen(viewModel.state)
+}
+
+
 object NavigationKeys {
 
     object Arg {
@@ -78,7 +92,9 @@ object NavigationKeys {
     }
 
     object Route {
+
         const val TEAMS_LIST = "teams_list"
+        const val TEAM_DETAILS = "$TEAMS_LIST/{$TEAM_ID}"
     }
 }
 
