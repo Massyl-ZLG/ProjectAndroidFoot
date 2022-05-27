@@ -52,5 +52,14 @@ data class  MatchResponse(
     @SerializedName(" odds") val  odds: Odds
 )
 
+data class  UserResponse(
+    @SerializedName("id") val id: String,
+    @SerializedName(" name") val  name: String,
+    @SerializedName("email") val email: String,
+    @SerializedName("photoUrl") val photoUrl: String,
+)
+
+
+
 
 
