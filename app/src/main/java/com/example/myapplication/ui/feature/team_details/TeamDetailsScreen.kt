@@ -7,6 +7,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
@@ -17,10 +18,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
+import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
@@ -42,20 +45,90 @@ fun TeamDetailsScreen(state: TeamDetailsContract.State) {
                     TeamDetailsCollapsingToolbar(state.team, scrollOffset)
                 }
                 Spacer(modifier = Modifier.height(2.dp))
+
+                TeamInfos(state.team)
+
+                Spacer(modifier = Modifier.height(2.dp))
                 LazyColumn(
-                    state = scrollState,
-                    contentPadding = PaddingValues(bottom = 16.dp)
-                ) {
-                    items(state.teamPlayersItems) { item ->
-                        PlayerRow(
-                            item = item )
-                    }
-            }
+                        state = scrollState,
+                        contentPadding = PaddingValues(bottom = 16.dp)
+                    ) {
+                        items(state.teamPlayersItems) { item ->
+                            PlayerRow(
+                                item = item )
+                        }
+                }
         }
     }
 }
 
 
+@Composable
+fun TeamInfos(
+    item: Team?
+){
+    Card(
+        shape = RoundedCornerShape(8.dp),
+        backgroundColor = MaterialTheme.colors.surface,
+        elevation = 2.dp,
+    ) {
+        var expanded by rememberSaveable { mutableStateOf(false) }
+        LazyColumn(modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp, top = 16.dp)) {
+                item{
+                    Text(
+                        modifier = Modifier.padding(end = 16.dp, top = 16.dp),
+                        text = "Information de l'équipe :",
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.subtitle1,
+                        maxLines = 2,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp
+                    )
+                }
+                item{
+                    Text(
+                    modifier = Modifier.padding(end = 16.dp, top = 16.dp),
+                    text = "Nom : "+item?.name ?: "",
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.subtitle1,
+                    maxLines = 2,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+                item{
+                    Text(
+                        modifier = Modifier.padding(end = 16.dp, top = 16.dp),
+                        text ="Nom court : " +item?.shortName ?: "",
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.subtitle1,
+                        maxLines = 2,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+                item{
+                    Text(
+                        modifier = Modifier.padding(end = 16.dp, top = 16.dp),
+                        text ="Addresse : " + item?.address ?: "",
+                        style = MaterialTheme.typography.subtitle1,
+                        maxLines = 1,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+                item{
+                    Text(
+                        modifier = Modifier.padding(end = 16.dp, top = 16.dp , bottom = 16.dp),
+                        text = "Site Web : " +item?.website ?: "",
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.subtitle1,
+                        maxLines = 2,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+        }
+    }
+}
 
 @Composable
 fun PlayerRow(
@@ -115,10 +188,10 @@ fun PlayerDetails(
             maxLines = 2,
             overflow = TextOverflow.Ellipsis
         )
-        if (item?.name?.trim()?.isNotEmpty() == true)
+        if (item?.position?.trim()?.isNotEmpty() == true)
             CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
                 Text(
-                    text = item.name.trim(),
+                    text = item.position.trim(),
                     textAlign = TextAlign.Start,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.caption,
@@ -148,10 +221,13 @@ private fun TeamDetailsCollapsingToolbar(
             Image(
                 painter = rememberImagePainter(
                     data = team?.crest,
+
                     builder = {
                         transformations(CircleCropTransformation())
                     },
+
                 ),
+
                 modifier = Modifier.size(max(72.dp, imageSize)),
                 contentDescription = "Food category thumbnail picture",
             )

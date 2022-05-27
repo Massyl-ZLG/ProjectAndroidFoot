@@ -162,7 +162,7 @@ fun TeamDetails(
 ) {
     Column(modifier = modifier) {
         Text(
-            text = item?.name ?: "",
+            text = item?.shortName ?: "",
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.subtitle1,
             maxLines = 2,

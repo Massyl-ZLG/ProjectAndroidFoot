@@ -12,6 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.myapplication.ui.NavigationKeys.Arg.PLAYER_ID
 import com.example.myapplication.ui.NavigationKeys.Arg.TEAM_ID
 import com.example.myapplication.ui.feature.team_details.TeamDetailsScreen
 import com.example.myapplication.ui.feature.team_details.TeamDetailsViewModel
@@ -84,17 +85,27 @@ private fun TeamDetailsDestination() {
     TeamDetailsScreen(viewModel.state)
 }
 
+/*
+@Composable
+private fun TeamDetailsPlayerDestination() {
+    val viewModel: TeamDetailsViewModel = hiltViewModel()
+    TeamDetailsScreen(viewModel.state)
+}
+*/
+
 
 object NavigationKeys {
 
     object Arg {
         const val TEAM_ID = "teamId"
+        const val PLAYER_ID = "playerId"
     }
 
     object Route {
 
         const val TEAMS_LIST = "teams_list"
         const val TEAM_DETAILS = "$TEAMS_LIST/{$TEAM_ID}"
+        const val TEAM_DETAILS_PLAYER = "$TEAMS_LIST/{$TEAM_ID}/{$PLAYER_ID}"
     }
 }
 
