@@ -6,6 +6,6 @@ data class Season(
     val startDate: String? = "",
     val endDate: String,
     val currentMatchday: String,
-    val winne: String? = ""
+    val winner: String? = ""
 
 )

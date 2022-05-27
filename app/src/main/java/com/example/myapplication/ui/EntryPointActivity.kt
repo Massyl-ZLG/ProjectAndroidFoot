@@ -14,8 +14,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.myapplication.ui.NavigationKeys.Arg.MATCH_ID
 import com.example.myapplication.ui.NavigationKeys.Arg.PLAYER_ID
 import com.example.myapplication.ui.NavigationKeys.Arg.TEAM_ID
+import com.example.myapplication.ui.feature.match_details.MatchDetailsScreen
+import com.example.myapplication.ui.feature.match_details.MatchDetailsViewModel
 import com.example.myapplication.ui.feature.matches.MatchesScreen
 import com.example.myapplication.ui.feature.matches.MatchesViewModel
 import com.example.myapplication.ui.feature.team_details.TeamDetailsScreen
@@ -69,6 +72,16 @@ private fun TeamsApp() {
           ) {
               TeamDetailsDestination()
           }
+        composable(
+            route = NavigationKeys.Route.MATCH_DETAILS,
+            arguments = listOf(
+                navArgument(NavigationKeys.Arg.MATCH_ID) {
+                    type = NavType.StringType
+                }
+            )
+        ) {
+            MatchDetailsDestination()
+        }
           /*composable(route = NavigationKeys.Route.POSTS) {
             PostsDestination()
         }
@@ -91,6 +104,12 @@ private fun TeamsDestination(navController: NavHostController) {
     )
 }
 
+@Composable
+private fun TeamDetailsDestination() {
+    val viewModel: TeamDetailsViewModel = hiltViewModel()
+    TeamDetailsScreen(viewModel.state)
+}
+
 
 @Composable
 private fun MatchesDestination(navController: NavHostController) {
@@ -104,13 +123,14 @@ private fun MatchesDestination(navController: NavHostController) {
     )
 }
 
-
-
 @Composable
-private fun TeamDetailsDestination() {
-    val viewModel: TeamDetailsViewModel = hiltViewModel()
-    TeamDetailsScreen(viewModel.state)
+private fun MatchDetailsDestination() {
+    val viewModel: MatchDetailsViewModel = hiltViewModel()
+    MatchDetailsScreen(viewModel.state)
 }
+
+
+
 
 /*
 @Composable
@@ -126,12 +146,19 @@ object NavigationKeys {
     object Arg {
         const val TEAM_ID = "teamId"
         const val PLAYER_ID = "playerId"
+        const val MATCH_ID = "matchId"
     }
 
     object Route {
         const val PROFIL = "profil"
-        const val TEAMS_LIST = "teams_list"
+
+        // handle matches routes
         const val MATCHES_LIST = "matches_list"
+        const val MATCH_DETAILS = "$MATCHES_LIST/{$MATCH_ID}"
+
+
+        // handle teams routes
+        const val TEAMS_LIST = "teams_list"
         const val TEAM_DETAILS = "$TEAMS_LIST/{$TEAM_ID}"
         const val TEAM_DETAILS_PLAYER = "$TEAMS_LIST/{$TEAM_ID}/{$PLAYER_ID}"
     }

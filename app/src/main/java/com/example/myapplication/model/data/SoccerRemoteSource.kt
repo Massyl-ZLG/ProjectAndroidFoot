@@ -78,9 +78,10 @@ class SoccerRemoteSource @Inject constructor(private val SoccerApi:SoccerApi){
 
         if (cachedMatches == null) {
             cachedMatches = SoccerApi.getMatches().mapMatchesToItems()
+            Log.d("SOCCER REMOTE MATCHES CACHED" , SoccerApi.getMatches().toString());
             this@SoccerRemoteSource.cachedMatches = cachedMatches
         }
-        Log.d("SOCCER REMOTE MATCHES" , SoccerApi.getMatches().toString());
+
         return@withContext cachedMatches
     }
 

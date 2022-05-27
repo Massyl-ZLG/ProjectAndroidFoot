@@ -16,7 +16,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -27,7 +26,6 @@ import coil.request.ImageRequest
 import com.example.myapplication.model.Team
 import com.example.myapplication.ui.theme.ComposeSampleTheme
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.onEach
 
 
 @ExperimentalCoilApi
