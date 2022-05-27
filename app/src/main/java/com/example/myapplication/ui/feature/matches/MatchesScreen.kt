@@ -14,7 +14,11 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
@@ -105,9 +109,9 @@ fun MatchRow(
     ) {
         var expanded by rememberSaveable { mutableStateOf(false) }
         Row(modifier = Modifier.animateContentSize()) {
-         /*   Box(modifier = Modifier.align(alignment = Alignment.CenterVertically)) {
-                TeamThumbnail(item.crest, iconTransformationBuilder)
-            }*/
+            Box(modifier = Modifier.align(alignment = Alignment.CenterVertically)) {
+                TeamThumbnail(item?.homeTeam?.crest, iconTransformationBuilder)
+            }
             MatchDetails(
                 item = item,
                 expandedLines = if (expanded) 10 else 2,
@@ -129,6 +133,9 @@ fun MatchRow(
                 ) {
                     ExpandableContentIcon(expanded)
                 }*/
+            Box(modifier = Modifier.align(alignment = Alignment.CenterVertically)) {
+                TeamThumbnail(item?.awayTeam?.crest, iconTransformationBuilder)
+            }
         }
     }
 }
@@ -140,25 +147,33 @@ fun MatchDetails(
     expandedLines: Int,
     modifier: Modifier
 ) {
-   /* Column(modifier = modifier) {
+    Column(modifier = modifier.fillMaxWidth()) {
+
+
+
         Text(
-            text = item?.shortName ?: "",
+            text = (item?.homeTeam?.shortName ?: "")+"   VS    "+ (item?.awayTeam?.shortName ?: ""),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.subtitle1,
-            maxLines = 2,
+            maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
-        if (item?.name?.trim()?.isNotEmpty() == true)
-            CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                Text(
-                    text = item.name.trim(),
-                    textAlign = TextAlign.Start,
-                    overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.caption,
-                    maxLines = expandedLines
-                )
-            }
-    }*/
+
+        //TeamThumbnail()
+
+
+        Text(
+            modifier = modifier.fillMaxWidth(),
+            text = (item?.score?.fullTime?.home ?: "")+"  - " + (item?.score?.fullTime?.away ?: ""),
+            textAlign = TextAlign.Center,
+            overflow = TextOverflow.Ellipsis,
+            style = MaterialTheme.typography.caption,
+            maxLines = expandedLines ,
+            fontWeight = FontWeight.Bold,
+            fontSize = 18.sp
+            )
+
+    }
 }
 
 

@@ -7,4 +7,5 @@ data class Score(
     val position: String? = "",
     val dateOfBirth: String,
     val nationality: String,
+    val fullTime: fullTime? = null
 )
