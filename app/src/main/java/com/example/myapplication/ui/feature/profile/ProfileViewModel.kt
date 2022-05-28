@@ -1,7 +1,10 @@
 package com.example.myapplication.ui.feature.profile
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.model.State
@@ -15,30 +18,15 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel  @Inject constructor(
-         private val repository: UserRepository
+    private val repository: UserRepository
 ) : ViewModel() {
 
-    init {
-        getUser()
-    }
-
-
-    val state by mutableStateOf(
-        ProfileContract.State(
-        user =null,
-        isLoading = true
-        )
+    var state by mutableStateOf(
+    ProfileContract.State(
+    user = repository.getCurrentUser(),
+    isLoading = true
+    )
     )
 
-    private fun getUser() {
-        repository.getCurrentUser()
-    }
-
-   /* fun addPost(post: Post) {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.addPost(post).collect {
-                mState.value = it
-            }
-        }
-    }*/
 }
+

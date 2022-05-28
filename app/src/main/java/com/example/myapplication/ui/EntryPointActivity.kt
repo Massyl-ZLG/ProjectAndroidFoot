@@ -73,22 +73,15 @@ var user: FirebaseUser? = null
 @ExperimentalPermissionsApi
 @AndroidEntryPoint
 class EntryPointActivity : AppCompatActivity() {
-    private lateinit var  auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        auth= FirebaseAuth.getInstance()
         setContent {
             ComposeSampleTheme {
                 TeamsApp()
-                //FormContainer(this)
             }
         }
     }
 
-    fun goToLogin(view: View){
-        val intent= Intent(this, LoginActivity::class.java)
-        startActivity(intent)
-    }
 
 }
 
@@ -261,6 +254,7 @@ fun LoginScreen(navController: NavHostController) {
             label = {
                 Text(text = "Password*")
             },
+            visualTransformation = if (passwordVisibility.value) PasswordVisualTransformation() else VisualTransformation.None
         )
         if (passwordErrorState.value) {
             Text(text = "Obligatoire")

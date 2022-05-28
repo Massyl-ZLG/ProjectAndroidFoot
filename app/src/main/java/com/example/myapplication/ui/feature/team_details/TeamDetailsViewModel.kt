@@ -24,7 +24,7 @@ class TeamDetailsViewModel @Inject constructor(
             )
         )
     )
-        private set
+       private set
 
     init {
         viewModelScope.launch {

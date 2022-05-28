@@ -7,10 +7,10 @@ data class User(
     val id: String,
 
     @SerializedName("name")
-    val name: String? = "",
+    var name: String? = "",
 
     @SerializedName("email")
-    val email: String? = "",
+    var email: String? = "",
 
     @SerializedName("photoUrl")
     val photoUrl : String? = ""
