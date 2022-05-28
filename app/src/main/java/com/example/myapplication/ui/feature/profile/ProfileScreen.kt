@@ -19,14 +19,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.myapplication.ui.feature.teams.TeamsContract
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
+import kotlinx.coroutines.flow.Flow
 
 @ExperimentalPermissionsApi
 @Composable
-
-fun ProfileScreen(viewModel: ProfileViewModel) {
+fun ProfileScreen(
+    state: ProfileContract.State)
+{
     val scaffoldState = rememberScaffoldState()
 
     Scaffold(

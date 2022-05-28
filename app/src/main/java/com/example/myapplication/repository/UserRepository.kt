@@ -1,44 +1,48 @@
 package com.example.myapplication.repository
 
-import com.example.myapplication.model.State
-import com.example.myapplication.model.Team
 import com.example.myapplication.model.User
-import com.example.myapplication.model.response.TeamsResponse
-import com.example.myapplication.model.response.UserResponse
 
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class UserRepository @Inject constructor()  {
-    private val mPostsCollection = Firebase.firestore.collection("USERS")
 
-    fun getCurrentUser() :Flow<State<User>> = callbackFlow {
+
+    fun getCurrentUser() : User?  {
        val user = Firebase.auth.currentUser
 
-        /* trySend(State.Loading())
-        val userDocument = mPostsCollection.document("user")
+        user?.let {
+            // Name, email address, and profile photo Url
+            val name = user.displayName
+            val email = user.email
+            val photoUrl = user.photoUrl
 
-        val subscription = userDocument.addSnapshotListener { snapshot, exception ->
-            exception?.let {
-                trySend(State.Failed(it.message.toString()))
-                cancel(it.message.toString())
-            }
-            if (snapshot!!.exists()) {
-                trySend(State.Success(snapshot.toObject(User::class.java)!!)).isSuccess
-            } else {
-                trySend(State.Failed("Not found")).isFailure
-            }
+            // Check if user's email is verified
+            val emailVerified = user.isEmailVerified
+
+            // The user's ID, unique to the Firebase project. Do NOT use this value to
+            // authenticate with your backend server, if you have one. Use
+            // FirebaseUser.getToken() instead.
+            val uid = user.uid
         }
-        awaitClose { subscription.remove() }*/
 
+        if (user != null) {
+            return User(
+                id = user.uid,
+                name =  user.displayName,
+                email = user.email,
+                photoUrl =  user.photoUrl.toString()
+                )
+        }
 
+        return User(
+            id = "1",
+            name =  "user.displayName",
+            email = "user.email",
+            photoUrl =  "user.photoUrl.toString()"
+        )
     }
 }

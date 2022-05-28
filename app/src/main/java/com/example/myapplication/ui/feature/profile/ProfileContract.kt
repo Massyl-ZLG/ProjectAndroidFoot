@@ -7,4 +7,8 @@ class ProfileContract {
         val user: User?,
         val isLoading: Boolean = false
     )
+
+    sealed class Effect {
+        object DataWasLoaded : Effect()
+    }
 }
