@@ -12,9 +12,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.buildAnnotatedString
@@ -27,6 +26,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import coil.annotation.ExperimentalCoilApi
 import com.example.myapplication.model.Photo
@@ -133,8 +133,21 @@ class EntryPointActivity : AppCompatActivity() {
 @Composable
 private fun TeamsApp(getCameraImage: ActivityResultLauncher<Uri>) {
     val navController = rememberNavController()
+    var showBottomBar by rememberSaveable { mutableStateOf(true) }
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+
+    showBottomBar = when (navBackStackEntry?.destination?.route) {
+        "login" -> false // on this screen bottom bar should be hidden
+        "register" -> false // here too
+        else -> true // in all other cases show bottom bar
+    }
     Scaffold(
-        bottomBar = {NavBar(navController)}
+        bottomBar = {
+            if(showBottomBar)
+                NavBar(navController)
+
+
+        }
     ) {
     NavHost(navController, startDestination = NavigationKeys.Route.LOGIN) {
 
@@ -186,64 +199,7 @@ private fun TeamsApp(getCameraImage: ActivityResultLauncher<Uri>) {
     }
     }
 }
-/*
 
-@Composable
-fun FormContainer(context : ComponentActivity){
-    val auth = Firebase.auth
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(8.dp)
-    ) {
-
-        val emailValue = remember { mutableStateOf(TextField(TextFieldValue() )) }
-        val passwordValue = remember { mutableStateOf(TextField( TextFieldValue() )) }
-
-
-        OutlinedTextField(
-            label =  { Text(text = "Email")},
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-            value =  emailValue.value,
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth(),
-            onValueChange = {
-                emailValue.value = it
-            }
-        )
-
-        OutlinedTextField(
-            label =  { Text(text = "Password")},
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            value =  passwordValue.value,
-            singleLine = true,
-            visualTransformation = PasswordVisualTransformation(),
-            modifier = Modifier.fillMaxWidth(),
-            onValueChange = {
-                passwordValue.value = it
-            }
-        )
-        Spacer(modifier = Modifier.padding(8.dp))
-
-        Button( modifier = Modifier.fillMaxWidth() ,
-            onClick = { auth.createUserWithEmailAndPassword(
-                 emailValue.value.text.trim(),
-                passwordValue.value.text.trim(),
-            ).addOnCompleteListener(context) {
-                task ->
-                if(task.isSuccessful){
-                    Log.d("AUTH" , "SUCCESS")
-                }else{
-                    Log.d("AUTH" , "Failed")
-                }
-            }
-
-            }) {
-            Text(text = "Register")
-        }
-    }
-}
-*/
 
 
 @Composable
