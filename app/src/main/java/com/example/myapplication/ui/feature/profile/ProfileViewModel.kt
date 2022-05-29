@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.feature.profile
 
+import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -10,6 +11,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.myapplication.model.State
 import com.example.myapplication.model.User
 import com.example.myapplication.repository.UserRepository
+import com.example.myapplication.ui.EntryPointActivity
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,16 +20,17 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 @HiltViewModel
-class ProfileViewModel  @Inject constructor(
+class ProfileViewModel  @OptIn(ExperimentalPermissionsApi::class)
+@Inject constructor(
     private val repository: UserRepository
 ) : ViewModel() {
+
 
     var state by mutableStateOf(
     ProfileContract.State(
     user = repository.getCurrentUser(),
     isLoading = true
     )
-    )
-
+)
 }
 

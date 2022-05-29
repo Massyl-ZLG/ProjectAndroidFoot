@@ -1,67 +1,51 @@
 package com.example.myapplication.ui
 
-import android.app.Activity.RESULT_OK
-import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavHostController
-import androidx.navigation.NavType
+import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import coil.annotation.ExperimentalCoilApi
-import com.example.myapplication.LoginActivity
-import com.example.myapplication.MainActivity
 import com.example.myapplication.ui.NavigationKeys.Arg.MATCH_ID
 import com.example.myapplication.ui.NavigationKeys.Arg.PLAYER_ID
 import com.example.myapplication.ui.NavigationKeys.Arg.TEAM_ID
-import com.example.myapplication.ui.feature.auth.RegisterScreen
 import com.example.myapplication.ui.feature.match_details.MatchDetailsScreen
 import com.example.myapplication.ui.feature.match_details.MatchDetailsViewModel
 import com.example.myapplication.ui.feature.matches.MatchesScreen
 import com.example.myapplication.ui.feature.matches.MatchesViewModel
 import com.example.myapplication.ui.feature.profile.ProfileScreen
 import com.example.myapplication.ui.feature.profile.ProfileViewModel
+import com.example.myapplication.ui.feature.profile.uri
 import com.example.myapplication.ui.feature.team_details.TeamDetailsScreen
 import com.example.myapplication.ui.feature.team_details.TeamDetailsViewModel
 import com.example.myapplication.ui.feature.teams.TeamsScreen
 import com.example.myapplication.ui.feature.teams.TeamsViewModel
 import com.example.myapplication.ui.navBar.NavBar
 import com.example.myapplication.ui.theme.ComposeSampleTheme
-import com.firebase.ui.auth.AuthUI
-import com.firebase.ui.auth.FirebaseAuthAnonymousUpgradeException
-import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
-import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -69,15 +53,25 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.receiveAsFlow
 
 var user: FirebaseUser? = null
-
 @ExperimentalPermissionsApi
 @AndroidEntryPoint
 class EntryPointActivity : AppCompatActivity() {
+    private lateinit var getCameraImage: ActivityResultLauncher<Uri>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        getCameraImage = registerForActivityResult(ActivityResultContracts.TakePicture()){
+                success ->
+            if(success){
+
+                Log.i("CAMERA IMAGE" , "IMAGE LOCATION :$uri")
+            }else{
+                Log.i("CAMERA IMAGE" , "IMAGE NOT SAVED :$uri")
+            }
+        }
         setContent {
             ComposeSampleTheme {
-                TeamsApp()
+                TeamsApp( getCameraImage)
             }
         }
     }
@@ -87,9 +81,8 @@ class EntryPointActivity : AppCompatActivity() {
 
 
 @ExperimentalPermissionsApi
-@Preview
 @Composable
-private fun TeamsApp() {
+private fun TeamsApp(getCameraImage: ActivityResultLauncher<Uri>) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = {NavBar(navController)}
@@ -132,7 +125,7 @@ private fun TeamsApp() {
             MatchDetailsDestination()
         }
         composable(route = NavigationKeys.Route.PROFILE) {
-            ProfileDestination()
+            ProfileDestination(getCameraImage =  getCameraImage)
         }
 
           /*composable(route = NavigationKeys.Route.POSTS) {
@@ -503,9 +496,9 @@ private fun MatchDetailsDestination() {
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-private fun ProfileDestination() {
+private fun ProfileDestination(getCameraImage :ActivityResultLauncher<Uri> ) {
     val viewModel: ProfileViewModel = hiltViewModel()
-    ProfileScreen(viewModel.state)
+    ProfileScreen(viewModel.state , getCameraImage)
 }
 
 
