@@ -50,6 +50,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import dagger.hilt.android.AndroidEntryPoint
@@ -84,6 +85,7 @@ class EntryPointActivity : AppCompatActivity() {
 
     private fun uploadPhoto(photo: Photo){
         var uri = Uri.parse(photo.localUri)
+        val user = Firebase.auth.currentUser
         val imageRef = storageReference.child("profile_pictures/${user?.uid}/${uri.lastPathSegment}")
         val uploadTask = imageRef.putFile(uri)
         uploadTask.addOnSuccessListener {
@@ -92,7 +94,7 @@ class EntryPointActivity : AppCompatActivity() {
             downloadUrl.addOnSuccessListener {
                 remoteUri ->
                 photo.remoteUri = remoteUri.toString()
-                //updatePhotoDatabase(photo)
+                updatePhotoDatabase(photo)
             }
         }
         uploadTask.addOnFailureListener{
@@ -101,6 +103,8 @@ class EntryPointActivity : AppCompatActivity() {
     }
 
     private fun updatePhotoDatabase(photo: Photo) {
+        val user = Firebase.auth.currentUser
+        firestore = Firebase.firestore
         user?.let {
             user ->
             var profilePhoto = firestore.collection("users")
@@ -111,7 +115,7 @@ class EntryPointActivity : AppCompatActivity() {
             handle.addOnSuccessListener {
                 Log.i("ENTRY POINT UPLOAD OK" , "Upload photo metadata")
                 photo.id = it.id;
-                //profilePhoto = firestore.collection("users").document(it.uid).collection("profilePictures").document(photo.id).set(photo)
+                 firestore.collection("users").document(user.uid).collection("profile_pictures").document(photo.id).set(photo)
             }
 
             handle.addOnFailureListener{
