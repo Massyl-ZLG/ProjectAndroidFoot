@@ -29,6 +29,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import coil.annotation.ExperimentalCoilApi
+import com.example.myapplication.model.Photo
 import com.example.myapplication.ui.NavigationKeys.Arg.MATCH_ID
 import com.example.myapplication.ui.NavigationKeys.Arg.PLAYER_ID
 import com.example.myapplication.ui.NavigationKeys.Arg.TEAM_ID
@@ -48,7 +49,9 @@ import com.example.myapplication.ui.theme.ComposeSampleTheme
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.receiveAsFlow
 
@@ -57,14 +60,17 @@ var user: FirebaseUser? = null
 @AndroidEntryPoint
 class EntryPointActivity : AppCompatActivity() {
     private lateinit var getCameraImage: ActivityResultLauncher<Uri>
+    private lateinit var firestore: FirebaseFirestore
+    private var storageReference = FirebaseStorage.getInstance().getReference()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         getCameraImage = registerForActivityResult(ActivityResultContracts.TakePicture()){
                 success ->
             if(success){
-
                 Log.i("CAMERA IMAGE" , "IMAGE LOCATION :$uri")
+                val photo = Photo(localUri = uri.toString())
+                uploadPhoto(photo)
             }else{
                 Log.i("CAMERA IMAGE" , "IMAGE NOT SAVED :$uri")
             }
@@ -73,6 +79,45 @@ class EntryPointActivity : AppCompatActivity() {
             ComposeSampleTheme {
                 TeamsApp( getCameraImage)
             }
+        }
+    }
+
+    private fun uploadPhoto(photo: Photo){
+        var uri = Uri.parse(photo.localUri)
+        val imageRef = storageReference.child("profile_pictures/${user?.uid}/${uri.lastPathSegment}")
+        val uploadTask = imageRef.putFile(uri)
+        uploadTask.addOnSuccessListener {
+            Log.i("ENTRY POINT UPLOAD OK" , "SUCCESS :$imageRef")
+            var downloadUrl = imageRef.downloadUrl
+            downloadUrl.addOnSuccessListener {
+                remoteUri ->
+                photo.remoteUri = remoteUri.toString()
+                //updatePhotoDatabase(photo)
+            }
+        }
+        uploadTask.addOnFailureListener{
+            Log.e("ENTRY POINT UPLOAD" , "FAILED :"+it.message)
+        }
+    }
+
+    private fun updatePhotoDatabase(photo: Photo) {
+        user?.let {
+            user ->
+            var profilePhoto = firestore.collection("users")
+                .document(user.uid)
+                .collection("profile_pictures")
+
+            var handle = profilePhoto.add(photo)
+            handle.addOnSuccessListener {
+                Log.i("ENTRY POINT UPLOAD OK" , "Upload photo metadata")
+                photo.id = it.id;
+                //profilePhoto = firestore.collection("users").document(it.uid).collection("profilePictures").document(photo.id).set(photo)
+            }
+
+            handle.addOnFailureListener{
+                Log.e("ENTRY POINT updatePhotoDatabase" , "FAILED :"+it.message)
+            }
+
         }
     }
 
