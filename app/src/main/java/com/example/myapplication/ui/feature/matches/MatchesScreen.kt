@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
+import com.example.myapplication.R
 import com.example.myapplication.model.match.Match
 import kotlinx.coroutines.flow.Flow
 
@@ -47,9 +48,9 @@ fun MatchesScreen(
      }*/
     Scaffold(
         scaffoldState = scaffoldState,
-        topBar = {
+       /* topBar = {
             MatchesAppBar()
-        },
+        },*/
     ) {
         Box {
             MatchesList(matches = state.matches) { itemId ->

@@ -23,12 +23,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
+import coil.compose.rememberImagePainter
+import coil.request.ImageRequest
 import com.example.myapplication.R
 import com.example.myapplication.model.User
 import com.firebase.ui.auth.AuthUI.getApplicationContext
@@ -72,7 +76,8 @@ fun ProfileScreen(
 @Composable
 private fun displayProfilInfos(
     item: User?,
-    activityResult: ActivityResultLauncher<Uri>
+    activityResult: ActivityResultLauncher<Uri>,
+    iconTransformationBuilder: ImageRequest.Builder.() -> Unit = { }
 ){
     val name = remember  { mutableStateOf(TextFieldValue()) }
     val nameErrorState = remember { mutableStateOf(false) }
@@ -89,24 +94,19 @@ private fun displayProfilInfos(
                 .size(100.dp)
 
         ) {
-            Image(
-                painterResource(R.drawable.ic_launcher_background),
-                contentDescription = "",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
-            )
-          /*  AsyncImage(
-                model = "https://wallpaperaccess.com/full/137507.jpg" *//*ImageRequest.Builder(LocalContext.current)
-                    .data("https://wallpaperaccess.com/full/137507.jpg")
-                    .crossfade(true)
-                    .build()*//*,
-                placeholder = painterResource(R.drawable.ic_launcher_foreground),
-                contentDescription = "img desc",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(64.dp)
-                    .clip(CircleShape)
-            )*/
+            Column(modifier = Modifier
+                .background(Color.Cyan)
+                .fillMaxSize().align(alignment = Alignment.CenterHorizontally)
+            ) {
+                    if (item != null) {
+                        ProfilePhotoThumbnail(item.photoUrl , iconTransformationBuilder)
+                    }else{
+                        val image: Painter = painterResource(id = R.drawable.ic_launcher_background)
+                        Image(painter = image,contentDescription = "Default")
+                    }
+            }
+
+
         }
         Column(   modifier = Modifier
             .padding(20.dp)
@@ -139,6 +139,9 @@ private fun displayProfilInfos(
             Spacer(modifier = Modifier.padding(8.dp))
         }
         Column{
+
+
+            FeatureThatRequiresCameraPermission(activityResult )
             Spacer(modifier = Modifier.padding(8.dp))
             Button(
                 onClick = {
@@ -146,17 +149,33 @@ private fun displayProfilInfos(
 
                 },
                 content = {
-                    Text(text = "Updater le profil")
+                    Text(text = "Editer")
                 },
                 modifier = Modifier.fillMaxWidth(),
             )
             Spacer(modifier = Modifier.padding(8.dp))
 
-            FeatureThatRequiresCameraPermission(activityResult )
+
 
         }
     }
 
+}
+
+@Composable
+fun ProfilePhotoThumbnail(
+    photoUrl: String?,
+    iconTransformationBuilder: ImageRequest.Builder.() -> Unit
+) {
+    Image(
+        painter = rememberImagePainter(
+            data = photoUrl,
+            builder = iconTransformationBuilder
+        ),
+        modifier = Modifier
+            .fillMaxSize(),
+        contentDescription = "Profile picture",
+    )
 }
 
 private fun updateProfile( name : String ) {
@@ -235,17 +254,22 @@ private fun FeatureThatRequiresCameraPermission(
                         }
                     }
                     is PermissionStatus.Denied -> {
-                        Column {
+                        Column (   modifier = Modifier
+                            .padding(20.dp)
+                            .background(Color.White)
+                            .fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally){
                             val status = writeExternalStoragePermissionState.status as PermissionStatus.Denied
                             val textToShow = if (status.shouldShowRationale) {
-                                "The camera is important for this app. Please grant the permission."
+                                "La camera est tres importante pour cette fonctionnalité"
                             } else {
-                                "Camera permission required for this feature to be available. " +
-                                        "Please grant the permission"
+                                        "S'il-vous-plait autorisez l'accée à la caméra"
                             }
                             Text(textToShow)
-                            Button(onClick = { writeExternalStoragePermissionState.launchPermissionRequest() }) {
-                                Text("Request permission")
+                            Button( modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp) ,onClick = { writeExternalStoragePermissionState.launchPermissionRequest() }) {
+                                Text("Autoriser l'accée")
                             }
                         }
                     }
@@ -254,17 +278,23 @@ private fun FeatureThatRequiresCameraPermission(
 
         }
         is PermissionStatus.Denied -> {
-            Column {
+            Column (  modifier = Modifier
+                .padding(20.dp)
+                .background(Color.White)
+                .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally){
                 val status = cameraPermissionState.status as PermissionStatus.Denied
                 val textToShow = if (status.shouldShowRationale) {
-                    "The camera is important for this app. Please grant the permission."
+                    "La camera est tres importante pour cette fonctionnalité"
                 } else {
-                    "Camera permission required for this feature to be available. " +
-                            "Please grant the permission"
+                            "S'il-vous-plait autorisez l'accée à la caméra"
                 }
-                Text(textToShow)
-                Button(onClick = { cameraPermissionState.launchPermissionRequest() }) {
-                    Text("Request permission")
+
+                Text(text = textToShow )
+                Button(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp) ,onClick = { cameraPermissionState.launchPermissionRequest() }) {
+                    Text("Autoriser l'accée")
                 }
             }
         }

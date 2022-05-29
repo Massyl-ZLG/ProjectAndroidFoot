@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.feature.match_details
 
+import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.BorderStroke

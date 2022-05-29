@@ -22,6 +22,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
@@ -48,13 +49,17 @@ import com.example.myapplication.ui.navBar.NavBar
 import com.example.myapplication.ui.theme.ComposeSampleTheme
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 
 var user: FirebaseUser? = null
 @ExperimentalPermissionsApi
@@ -105,9 +110,24 @@ class EntryPointActivity : AppCompatActivity() {
     private fun updatePhotoDatabase(photo: Photo) {
         val user = Firebase.auth.currentUser
         firestore = Firebase.firestore
+
+
         user?.let {
             user ->
-            var profilePhoto = firestore.collection("users")
+           val profileUpdates = UserProfileChangeRequest.Builder()
+                .setPhotoUri(photo.remoteUri.toUri())
+                .build()
+
+            CoroutineScope(Dispatchers.IO).launch {
+                user.updateProfile(profileUpdates).addOnCompleteListener { task ->
+                    if(task.isSuccessful){
+                        Log.d("PROFIL SCREEN PHOTO" , "PROFIL UPDATED")
+                    }
+                }.addOnFailureListener{ exception ->
+                    Log.d("PROFIL SCREEN" , "PROFIL NOTTT UPDATED")
+                }
+            }
+          /*  var profilePhoto = firestore.collection("users")
                 .document(user.uid)
                 .collection("profile_pictures")
 
@@ -120,7 +140,7 @@ class EntryPointActivity : AppCompatActivity() {
 
             handle.addOnFailureListener{
                 Log.e("ENTRY POINT updatePhotoDatabase" , "FAILED :"+it.message)
-            }
+            }*/
 
         }
     }
