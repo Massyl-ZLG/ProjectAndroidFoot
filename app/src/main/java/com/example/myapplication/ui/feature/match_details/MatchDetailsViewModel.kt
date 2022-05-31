@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.model.data.SoccerRemoteSource
 import com.example.myapplication.ui.NavigationKeys
-import com.example.myapplication.ui.feature.team_details.TeamDetailsContract
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

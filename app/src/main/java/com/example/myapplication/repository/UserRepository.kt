@@ -1,6 +1,6 @@
 package com.example.myapplication.repository
 
-import android.util.Log
+
 import com.example.myapplication.model.User
 
 import com.google.firebase.auth.ktx.auth
@@ -15,9 +15,8 @@ class UserRepository @Inject constructor()  {
 
     fun getCurrentUser() : User  {
         val user = Firebase.auth.currentUser
-        val firestore = Firebase.firestore
-        //val photoUrl = user?.let { firestore.collection("users").document(it.uid).collection("profile_pictures").get() }
-        //Log.i("USER REPO" , photoUrl.toString() )
+
+
         user?.let {
             // Name, email address, and profile photo Url
             val name = user.displayName

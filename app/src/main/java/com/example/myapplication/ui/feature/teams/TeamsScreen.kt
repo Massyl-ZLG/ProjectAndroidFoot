@@ -37,16 +37,7 @@ fun TeamsScreen(
 ){
     val scaffoldState: ScaffoldState = rememberScaffoldState()
 
-    // Listen for side effects from the VM
-   /*LaunchedEffect(effectFlow) {
-        effectFlow?.onEach { effect ->
-            if (effect is TeamsContract.Effect.DataWasLoaded)
-                scaffoldState.snackbarHostState.showSnackbar(
-                    message = "Teams are loaded.",
-                    duration = SnackbarDuration.Short
-                )
-        }?.collect()
-    }*/
+
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
@@ -127,14 +118,7 @@ fun TeamRow(
                     .fillMaxWidth(0.80f)
                     .align(Alignment.CenterVertically)
             )
-            /*if (itemShouldExpand)
-                Box(
-                    modifier = Modifier
-                        .align(if (expanded) Alignment.Bottom else Alignment.CenterVertically)
-                        .noRippleClickable { expanded = !expanded }
-                ) {
-                    ExpandableContentIcon(expanded)
-                }*/
+
         }
     }
 }

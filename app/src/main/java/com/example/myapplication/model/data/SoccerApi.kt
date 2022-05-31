@@ -1,6 +1,6 @@
 package com.example.myapplication.model.data
 
-import com.example.myapplication.model.response.MatchResponse
+
 import com.example.myapplication.model.response.MatchesResponse
 import com.example.myapplication.model.response.TeamResponse
 import com.example.myapplication.model.response.TeamsResponse

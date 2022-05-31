@@ -1,11 +1,10 @@
 package com.example.myapplication.ui.feature.match_details
 
-import android.util.Log
+
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.Arrangement.Absolute.Center
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
@@ -421,35 +420,6 @@ private fun MatchDetailsCollapsingToolbar(
             elevation = 4.dp
         ) {
 
-           /* LazyRow( horizontalArrangement = Arrangement.Center){
-                item {
-                    Image(
-                        painter = rememberImagePainter(
-                            data = team?.crest,
-
-                            builder = {
-                                transformations(CircleCropTransformation())
-                            },
-
-                            ),
-
-                        modifier = Modifier.size(max(72.dp, imageSize)),
-                        contentDescription = "Food category thumbnail picture",
-                    )
-                }
-            }*/
-
         }
-        /* PlayerDetails(
-             item = player,
-             expandedLines = (max(3f, scrollOffset * 6)).toInt(),
-             modifier = Modifier
-                 .padding(
-                     end = 16.dp,
-                     top = 16.dp,
-                     bottom = 16.dp
-                 )
-                 .fillMaxWidth()
-         )*/
     }
 }

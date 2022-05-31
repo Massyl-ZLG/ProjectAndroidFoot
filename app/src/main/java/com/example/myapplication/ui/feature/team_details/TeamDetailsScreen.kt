@@ -168,14 +168,7 @@ fun PlayerRow(
                     .fillMaxWidth(0.80f)
                     .align(Alignment.CenterVertically)
             )
-            /*if (itemShouldExpand)
-                Box(
-                    modifier = Modifier
-                        .align(if (expanded) Alignment.Bottom else Alignment.CenterVertically)
-                        .noRippleClickable { expanded = !expanded }
-                ) {
-                    ExpandableContentIcon(expanded)
-                }*/
+
         }
     }
 }

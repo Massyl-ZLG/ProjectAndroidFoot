@@ -4,7 +4,6 @@ import android.util.Log
 import com.example.myapplication.model.Player
 import com.example.myapplication.model.Team
 import com.example.myapplication.model.match.*
-import com.example.myapplication.model.response.MatchResponse
 import com.example.myapplication.model.response.MatchesResponse
 import com.example.myapplication.model.response.TeamResponse
 import com.example.myapplication.model.response.TeamsResponse

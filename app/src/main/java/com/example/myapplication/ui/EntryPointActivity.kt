@@ -127,20 +127,7 @@ class EntryPointActivity : AppCompatActivity() {
                     Log.d("PROFIL SCREEN" , "PROFIL NOTTT UPDATED")
                 }
             }
-          /*  var profilePhoto = firestore.collection("users")
-                .document(user.uid)
-                .collection("profile_pictures")
 
-            var handle = profilePhoto.add(photo)
-            handle.addOnSuccessListener {
-                Log.i("ENTRY POINT UPLOAD OK" , "Upload photo metadata")
-                photo.id = it.id;
-                 firestore.collection("users").document(user.uid).collection("profile_pictures").document(photo.id).set(photo)
-            }
-
-            handle.addOnFailureListener{
-                Log.e("ENTRY POINT updatePhotoDatabase" , "FAILED :"+it.message)
-            }*/
 
         }
     }
@@ -210,12 +197,6 @@ private fun TeamsApp(getCameraImage: ActivityResultLauncher<Uri>) {
             ProfileDestination(getCameraImage =  getCameraImage)
         }
 
-          /*composable(route = NavigationKeys.Route.POSTS) {
-            PostsDestination()
-        }
-        composable(route = NavigationKeys.Route.LOCATION) {
-            LocationDestination()
-        }*/
     }
     }
 }

@@ -1,9 +1,8 @@
 package com.example.myapplication.ui.feature.profile
 
 
-import android.net.Uri
+
 import com.example.myapplication.model.User
-import com.example.myapplication.ui.EntryPointActivity
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 
 class ProfileContract {
